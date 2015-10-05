@@ -82,14 +82,14 @@ char rotate_three_descr[] = "third attempt: apply loop unrolling";
 void attempt_three(int dim, pixel *src, pixel *dst) 
 {
     register int i,j, dim_square = dim * dim;
-    for (i = 0; i < dim; ++i) {
+    for ( i = 0; i < dim; ++i ) {
         int i_by_dim = i*dim;
         for (j = 0; j < dim - 7; j += 8) {
             // dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
             int dest_index = dim_square - dim - j * dim + i;
             int src_index = i_by_dim + j;
             
-            dst[dest_index] = src[src_index];
+            dst[dest_index]           = src[src_index];
             dst[dest_index - dim]     = src[src_index + 1];
             dst[dest_index - 2 * dim] = src[src_index + 2];
             dst[dest_index - 3 * dim] = src[src_index + 3];
@@ -100,6 +100,18 @@ void attempt_three(int dim, pixel *src, pixel *dst)
         }   
     }
 }
+
+char rotate_four_descr[] = "4th attempt: change loop order";
+void attempt_four(int dim, pixel *src, pixel *dst) 
+{
+    
+    int i,j;
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+        dst[RIDX(dim - 1 - i, j, dim)] = src[RIDX(j, i, dim)];
+}
+
+
 
 /*********************************************************************
  * register_rotate_functions - Register all of your different versions
@@ -116,7 +128,7 @@ void register_rotate_functions()
 
     add_rotate_function(&attempt_two, rotate_two_descr);   
     add_rotate_function(&attempt_three, rotate_three_descr);   
-    //add_rotate_function(&attempt_four, rotate_four_descr);   
+    add_rotate_function(&attempt_four, rotate_four_descr);   
     //add_rotate_function(&attempt_five, rotate_five_descr);   
     //add_rotate_function(&attempt_six, rotate_six_descr);   
     //add_rotate_function(&attempt_seven, rotate_seven_descr);   
